@@ -1,11 +1,29 @@
 import React, { Component } from 'react';
 import Header from './Components/Header'
 import AgregarCita from './Components/AgregarCita'
+import ListaCita from './Components/ListaCitas'
 
 class App extends Component {
     
     state={
       citas: []
+    }
+
+    componentDidMount(){
+      const citasLS  =localStorage.getItem('citas')
+      if(citasLS){
+        this.setState({
+          citas: JSON.parse(citasLS)
+        })
+      }
+        }
+
+    componentDidUpdate(){
+      localStorage.setItem(
+        'citas',
+        JSON.stringify(this.state.citas)
+      )
+
     }
 
 
@@ -22,6 +40,18 @@ class App extends Component {
 
   }
 
+  borrarCita =id =>{
+    // leer cita
+    const citasActuales = [...this.state.citas]
+    //borrar del areglo
+    const citas = citasActuales.filter(cita=> cita.id !== id)
+    // cambiar state
+    this.setState({
+      citas
+    })
+
+  }
+
   render() {
     return (
       <div className='container'>
@@ -34,6 +64,13 @@ class App extends Component {
           crearCita={this.crearCita}
           />
 
+          </div>
+          <div className='col-md-6'>
+            <ListaCita 
+              citas={this.state.citas}
+              borrarCita= {this.borrarCita}
+            
+            />
           </div>
         </div>
 
